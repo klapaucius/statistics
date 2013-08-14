@@ -14,36 +14,36 @@
 module Statistics.Sample.Foldl where
 
 import Statistics.Types (Sample,WeightedSample)
-import Statistics.Sample (T, T1, V)
 import qualified Data.Vector.Generic as G
-import Control.Foldl (Fold)
+import Control.Foldl (Fold(..))
+import Control.Applicative ((<$>), (<*>))
 
 -- Operator ^ will be overriden
 import Prelude hiding ((^))
 
 -- | Apply a strict left 'Fold' to a vector and extract the final result
 fold :: (G.Vector v a) => Fold a b -> v a -> b
-fold (Fold step begin done) xs = done (G.foldl' step begin xs)
+fold (Fold go begin fini) xs = fini (G.foldl' go begin xs)
 {-# INLINE fold #-}
 
 -- | Compute the minimum of a vector.
-min :: Fold Double Double
-min = Fold go (-1/0) id
+findMin :: Fold Double Double
+findMin = Fold go (1/0) id
   where
     go lo k = min lo k
-{-# INLINE min #-}
+{-# INLINE findMin #-}
 
 -- | Compute the maximum of a vector.
-max :: Fold Double Double
-max = Fold go (1/0) id
+findMax :: Fold Double Double
+findMax = Fold go (-1/0) id
   where
     go hi k = max hi k
-{-# INLINE max #-}
+{-# INLINE findMax #-}
 
 -- | /O(n)/ Range. The difference between the largest and smallest
 -- elements of a sample.
 range :: Fold Double Double
-range s = (-) <$> max <*> min
+range = (-) <$> findMax <*> findMin
 {-# INLINE range #-}
 
 -- | /O(n)/ Arithmetic mean.  This uses Welford's algorithm to provide
@@ -80,11 +80,20 @@ harmonicMean = Fold go (T 0 0) fini
 
 -- | /O(n)/ Geometric mean of a sample containing no negative values.
 geometricMean :: Fold Double Double
-geometricMean = Fold go' init (exp . fini)
-  where
-    go s x = go' s (log x)
-    Fold go' init fini = mean
+geometricMean = modify mean
+    where
+      modify (Fold go' begin fini) = Fold go begin (exp . fini) 
+        where 
+          go s x = go' s (log x)
 {-# INLINE geometricMean #-}
+
+
+data V = V {-# UNPACK #-} !Double {-# UNPACK #-} !Double
+
+-- don't support polymorphism, as we can't get unboxed returns if we use it.
+data T = T {-# UNPACK #-}!Double {-# UNPACK #-}!Int
+
+data T1 = T1 {-# UNPACK #-}!Int {-# UNPACK #-}!Double {-# UNPACK #-}!Double
 
 ------------------------------------------------------------------------
 -- Helper code. Monomorphic unpacked accumulators.

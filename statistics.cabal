@@ -144,7 +144,7 @@ library
     vector            >= 0.7.1,
     vector-algorithms >= 0.4,
     vector-binary-instances >= 0.2.1,
-    foldl
+    foldl             >= 1.0
   if impl(ghc < 7.6)
     build-depends:
       ghc-prim
@@ -206,3 +206,13 @@ benchmark bench-all
   build-depends:    base, criterion, vector, math-functions, primitive, 
                     vector-algorithms, mwc-random
   ghc-options:      -O2
+
+benchmark bench-fold
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   . benchmark
+  main-is:          benchfold.hs
+  build-depends:    base, criterion, vector, math-functions, primitive, 
+                    vector-algorithms, mwc-random, foldl
+  ghc-options:      -O2 -rtsopts -ddump-simpl -ddump-to-file -dsuppress-idinfo 
+                    -dsuppress-module-prefixes -dsuppress-type-applications 
+                    -dsuppress-coercions -dsuppress-uniques -dppr-case-as-let
