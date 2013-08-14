@@ -196,3 +196,11 @@ source-repository head
 source-repository head
   type:     mercurial
   location: https://bitbucket.org/bos/statistics
+
+benchmark bench-all
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   . benchmark
+  main-is:          bench.hs
+  build-depends:    base, criterion, vector, math-functions, primitive, 
+                    vector-algorithms, mwc-random
+  ghc-options:      -O2
