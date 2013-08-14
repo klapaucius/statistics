@@ -114,6 +114,7 @@ library
     Statistics.Resampling
     Statistics.Resampling.Bootstrap
     Statistics.Sample
+    Statistics.Sample.Foldl
     Statistics.Sample.Histogram
     Statistics.Sample.KernelDensity
     Statistics.Sample.KernelDensity.Simple
@@ -142,7 +143,8 @@ library
     primitive         >= 0.3,
     vector            >= 0.7.1,
     vector-algorithms >= 0.4,
-    vector-binary-instances >= 0.2.1
+    vector-binary-instances >= 0.2.1,
+    foldl
   if impl(ghc < 7.6)
     build-depends:
       ghc-prim
