@@ -40,6 +40,11 @@ findMax = Fold go (-1/0) id
     go hi k = max hi k
 {-# INLINE findMax #-}
 
+-- | Compute the minimum and maximum of a vector in one pass.
+minMax :: Fold Double (Double, Double)
+minMax = (,) <$> findMin <*> findMax
+{-# INLINE minMax #-}
+
 -- | /O(n)/ Range. The difference between the largest and smallest
 -- elements of a sample.
 range :: Fold Double Double
