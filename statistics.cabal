@@ -213,6 +213,4 @@ benchmark bench-fold
   main-is:          benchfold.hs
   build-depends:    base, criterion, vector, math-functions, primitive, 
                     vector-algorithms, mwc-random, foldl
-  ghc-options:      -O2 -rtsopts -ddump-simpl -ddump-to-file -dsuppress-idinfo 
-                    -dsuppress-module-prefixes -dsuppress-type-applications 
-                    -dsuppress-coercions -dsuppress-uniques -dppr-case-as-let
+  ghc-options:      -O2
